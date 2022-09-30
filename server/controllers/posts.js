@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import PostMessage from '../models/postMessage.js';
 
 
+
 export const getPosts = async (req, res) => {
     const { page } = req.query;
 
@@ -30,6 +31,19 @@ export const getPostsBySearch = async (req, res) => {
         const posts = await PostMessage.find({ $or: [ { title }, { tags: { $in: tags.split(',') }}] });
 
         res.json({ data: posts });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+
+//get post only one
+export const getPost = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const post = await PostMessage.findById(id);
+        res.status(200).json(post);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
