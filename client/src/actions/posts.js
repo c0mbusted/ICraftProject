@@ -1,15 +1,26 @@
-import { FETCH_ALL, CREATE, UPDATE, DELETE } from '../constants/actionTypes';
+import { FETCH_ALL, FETCH_BY_SEARCH, CREATE, UPDATE, DELETE } from '../constants/actionTypes';
 import * as api from '../api'; //so that we can just call something like api.fetchPosts
 
 //Action Creators
-export const getPosts = () => async (dispatch) => {
+export const getPosts = (page) => async (dispatch) => {
     try {
-        const { data } = await api.fetchPosts(); //we get response from api  and get data object, this represents the posts
+        const { data } = await api.fetchPosts(page); //we get response from api  and get data object, this represents the posts
         dispatch({ type: FETCH_ALL, payload: data });
     } catch (error) {
         console.log(error.message);
     }
 }
+
+//get posts by search
+export const getPostsBySearch = (searchQuery) => async (dispatch) => {
+    try {
+        const { data: { data } } = await api.fetchPostsBySearch(searchQuery); 
+        console.log(data);
+        dispatch({ type: FETCH_BY_SEARCH, payload: data });
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 export const createPost = (post) => async (dispatch) => {
     try {
